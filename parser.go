@@ -82,9 +82,9 @@ func makeKeyFromPaths(l *Line, m *metric) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			buffer.WriteString(substituteDots(substituteBrackets(m))) 
+			buffer.WriteString(substituteDots(substituteBrackets(m)))
 		} else {
-			buffer.WriteString(k.val)
+			buffer.WriteString(substituteBrackets(k.val))
 		}
 	}
 
