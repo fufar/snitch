@@ -14,8 +14,8 @@ This tool allows to parse log files and send statistics to statsd endpoint
 
 * {string} `config` - configuration file
 * {string} `statsd` - statsd endpoint
-* {string} `prefix` - statsd global key prefix, e.g. `balancer.` 
-* {int} `buffer` - buffer interval for metrics, `0` default: one metric - one request 
+* {string} `prefix` - statsd global key prefix, e.g. `balancer.`
+* {int} `buffer` - buffer interval for metrics, `0` default: one metric - one request
 
 ### Configuration file
 
@@ -50,11 +50,11 @@ where is:
 * {string} `prefix` - statsd key prefix, `%HOST%` is used as substitution a hostname
 * {string} `delimiter` - column delimiter in log files, it is reasonable to use `\t` delimiter in log files
 
-* {[]key} `keys` - list of keys, which would be send to statsd 
+* {[]key} `keys` - list of keys, which would be send to statsd
     * {string} `key` - statsd metric key, $N - means column position
     * {boolean} `count` - boolean, means  
     * {string} `timing` - column with time (time should be in seconds, like 0.001 - means 1ms)  
-    * {string} `delimiter` - delimiter into the column, 
+    * {string} `delimiter` - delimiter into the column,
             e.g. nginx can to write in one column a few values from upstream the request was in   
 
 
@@ -75,6 +75,11 @@ docker build -t xjewer/snitch:{tag} .
 ```
 docker run --rm -v "/var/log/nginx/balancer/:/var/log/:ro" xjewer/snitch:0.1 -file /var/log/for_script.access.log -statsd graphite.local:8125 -buffer 10
 ```
+
+### Version history
+
+* xjewer/snitch:v0.6.1  - default version
+* hub.core.tf/snitch:v0.6.2 - fixed `[]` brackets ( autoreplace `[` and `]` to nothing )
 
 ### Benchmarks
 
