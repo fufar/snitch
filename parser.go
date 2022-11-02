@@ -81,14 +81,16 @@ func makeKeyFromPaths(l *Line, m *metric) (string, error) {
 			buffer.WriteString(".")
 		}
 		if k.isVar {
-			m, err := getElementString(l, k.match, m.delimiter, true)
+			eS, err := getElementString(l, k.match, m.delimiter, true)
 			if err != nil {
 				return "", err
 			}
-			logger.Println("string: " + m)
-			logger.Println("string without dots: " + substituteDots(m))
-			logger.Println("string without dots and brackets: " + substituteDots(substituteBrackets(m)))
-			buffer.WriteString(substituteDots(substituteBrackets(m)))
+			logger.Println("string: " + eS)
+			logger.Println("string without dots: " + substituteDots(eS))
+			logger.Println("string without dots and brackets: " + substituteDots(substituteBrackets(eS)))
+			logger.Println("the line: " + l.text)
+			logger.Println("delimiter: " + m.delimiter)
+			buffer.WriteString(substituteDots(substituteBrackets(eS)))
 		} else {
 			buffer.WriteString(k.val)
 		}
