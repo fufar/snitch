@@ -46,7 +46,7 @@ func (p *Processor) Run() {
 				continue
 			}
 
-			err := p.p.HandleLine(l)
+			err := p.p.HandleLine(l, p.l)
 			if err != nil {
 				p.l.Println(err)
 				continue

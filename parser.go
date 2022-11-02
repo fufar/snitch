@@ -3,6 +3,8 @@ package snitch
 import (
 	"bytes"
 	"errors"
+	"github.com/Topface/snitch/lib/simplelog"
+	log "github.com/mgutz/logxi/v1"
 	"strconv"
 	"strings"
 
@@ -18,7 +20,7 @@ var (
 
 // Parser parses log text from reader and sends statistics
 type Parser interface {
-	HandleLine(*Line) error
+	HandleLine(*Line, simplelog.Logger) error
 }
 
 type handler struct {
@@ -43,10 +45,10 @@ func NewParser(r LogReader, s statsd.Statsd, cfg config.Source) (Parser, error) 
 }
 
 // handleLine handles log text and sends statistics to statsd
-func (h *handler) HandleLine(l *Line) error {
+func (h *handler) HandleLine(l *Line, log simplelog.Logger) error {
 	l.Split(h.cfg.Delimiter)
 	for _, m := range h.metrics {
-		key, err := makeKeyFromPaths(l, m)
+		key, err := makeKeyFromPaths(l, m, log)
 		if err != nil {
 			return err
 		}
@@ -70,7 +72,7 @@ func (h *handler) HandleLine(l *Line) error {
 
 // makeKeyFromPaths makes statsd key from keyPath
 // key keyPaths sets the order and type of each sequences
-func makeKeyFromPaths(l *Line, m *metric) (string, error) {
+func makeKeyFromPaths(l *Line, m *metric, log simplelog.Logger) (string, error) {
 	//todo use sync.Pool
 	var buffer bytes.Buffer
 	for i, k := range m.keyPaths {
@@ -82,9 +84,12 @@ func makeKeyFromPaths(l *Line, m *metric) (string, error) {
 			if err != nil {
 				return "", err
 			}
+			log.Println("string: " + m)
+			log.Println("string without dots: " + substituteDots(m))
+			log.Println("string without dots and brackets: " + substituteDots(substituteBrackets(m)))
 			buffer.WriteString(substituteDots(substituteBrackets(m)))
 		} else {
-			buffer.WriteString(substituteBrackets(k.val))
+			buffer.WriteString(k.val)
 		}
 	}
 
@@ -165,5 +170,5 @@ func substituteDots(s string) string {
 // substituteBrackets replaces dots in string
 func substituteBrackets(s string) string {
 	str := strings.Replace(s, "[", "", -1)
-    return strings.Replace(str, "]", "", -1)
+	return strings.Replace(str, "]", "", -1)
 }
