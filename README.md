@@ -54,8 +54,7 @@ where is:
     * {string} `key` - statsd metric key, $N - means column position
     * {boolean} `count` - boolean, means  
     * {string} `timing` - column with time (time should be in seconds, like 0.001 - means 1ms)  
-    * {string} `delimiter` - delimiter into the column,
-            e.g. nginx can to write in one column a few values from upstream the request was in   
+    * {string} `delimiter` - delimiter into the column, e.g. nginx can to write in one column a few values from upstream the request was in   
 
 
 Snitch allows handle a few sources per instance
