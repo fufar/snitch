@@ -78,11 +78,12 @@ func makeKeyFromPaths(l *Line, m *metric) (string, error) {
 			buffer.WriteString(".")
 		}
 		if k.isVar {
-			m, err := getElementString(l, k.match, m.delimiter, true)
+			eS, err := getElementString(l, k.match, m.delimiter, true)
 			if err != nil {
 				return "", err
 			}
-			buffer.WriteString(substituteDots(m))
+
+			buffer.WriteString(substituteDots(substituteBrackets(eS)))
 		} else {
 			buffer.WriteString(k.val)
 		}
@@ -160,4 +161,10 @@ func getAmount(s string, sep string) (float32, error) {
 // substituteDots replaces dots in string
 func substituteDots(s string) string {
 	return strings.Replace(s, ".", "_", -1)
+}
+
+// substituteBrackets replaces dots in string
+func substituteBrackets(s string) string {
+	str := strings.Replace(s, "[", "", -1)
+	return strings.Replace(str, "]", "", -1)
 }
