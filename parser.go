@@ -3,8 +3,6 @@ package snitch
 import (
 	"bytes"
 	"errors"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 
@@ -75,27 +73,11 @@ func (h *handler) HandleLine(l *Line) error {
 func makeKeyFromPaths(l *Line, m *metric) (string, error) {
 	//todo use sync.Pool
 	var buffer bytes.Buffer
-	logger := log.New(os.Stderr, "", log.LstdFlags)
 	for i, k := range m.keyPaths {
 		if i != 0 {
 			buffer.WriteString(".")
 		}
 		if k.isVar {
-			for i := 0; i < 5; i++ {
-				eS, err := getElementString(l, i, m.delimiter, true)
-				if err != nil {
-					continue
-				}
-				logger.Println("=====================================")
-				logger.Println("FOR I = " + strconv.Itoa(i))
-				logger.Println("string: " + eS)
-				logger.Println("string without dots: " + substituteDots(eS))
-				logger.Println("string without dots and brackets: " + substituteDots(substituteBrackets(eS)))
-				logger.Println("the line: " + l.text)
-				logger.Println("delimiter: " + m.delimiter)
-				logger.Println("=====================================")
-			}
-
 			eS, err := getElementString(l, k.match, m.delimiter, true)
 			if err != nil {
 				return "", err
